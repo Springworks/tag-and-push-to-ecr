@@ -1,0 +1,22 @@
+{
+  "name": "tag-and-push-to-ecr",
+  "version": "1.0.0",
+  "description": "Github action for tagging and pushing image to ECR.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Springworks/tag-and-push-to-ecr.git"
+  },
+  "author": "Springworks International AB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Springworks/tag-and-push-to-ecr/issues"
+  },
+  "homepage": "https://github.com/Springworks/tag-and-push-to-ecr#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/exec": "^1.0.1",
+    "aws-sdk": "^2.566.0",
+    "execa": "^3.3.0"
+  }
+}

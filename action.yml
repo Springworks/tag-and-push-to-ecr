@@ -1,0 +1,16 @@
+name: 'Tag and push to ECR'
+description: 'Github action for tagging and pushing image to ECR.'
+inputs:
+  deploy-file:
+    description: 'The deploy file to use.'
+    required: true
+    default: './deploy.json'
+  repository-name:
+    description: 'Name of repository'
+    required: true
+  build-number:
+    description: 'Build number'
+    required: true
+runs:
+  using: 'node12'
+  main: 'index.js'
