@@ -8,15 +8,15 @@ Github action for tagging and pushing image to ECR.
 
 **Required** Path to deploy file in repo. Defaults to `./deploy.json`
 
-### `repository-name`
-
-**Required** Name of the repository.
-
 ### `build-number`
 
 **Required** Build number.
 
 ## Environment variables
+
+### `REPOSITORY_NAME`
+
+**Required**
 
 ### `AWS_ACCESS_KEY_ID`
 

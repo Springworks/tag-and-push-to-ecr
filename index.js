@@ -43,8 +43,12 @@ async function pushDockerImage(ecr_tag, ecr_tag_latest) {
 
 async function run() {
   try {
+    const repository_name = process.env.REPOSITORY_NAME;
+    if(!repository_name) {
+      throw new Error('Required environment variable REPOSITORY_NAME is not set.');
+    }
+
     const deploy_file = core.getInput('deploy-file');
-    const repository_name = core.getInput('repository-name');
     const build_number = core.getInput('build-number');
 
     const current_tag = `${repository_name}:${build_number}`;
