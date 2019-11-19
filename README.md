@@ -26,7 +26,7 @@ Github action for tagging and pushing image to ECR.
 
 **Required**
 
-### `AWS_DEFAULT_REGION`
+### `AWS_REGION`
 
 **Required**
 

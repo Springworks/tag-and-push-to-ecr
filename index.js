@@ -48,6 +48,8 @@ async function run() {
       throw new Error('Required environment variable REPOSITORY_NAME is not set.');
     }
 
+    process.env.AWS_DEFAULT_REGION = process.env.AWS_REGION;
+
     const deploy_file = core.getInput('deploy-file');
     const build_number = core.getInput('build-number');
 
