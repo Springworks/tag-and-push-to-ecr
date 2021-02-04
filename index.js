@@ -4,29 +4,35 @@ const exec = require('@actions/exec');
 const execa = require('execa');
 const { resolve } = require('path');
 
+const url = '403799762630.dkr.ecr.eu-west-1.amazonaws.com';
+
 function getEcrImage(deploy_file) {
   const deploy = require(resolve(deploy_file));
-  return deploy.taskDefinition
-      && deploy.taskDefinition.containerDefinitions
-      && deploy.taskDefinition.containerDefinitions[0].image || '403799762630.dkr.ecr.eu-west-1.amazonaws.com/' + deploy.service.serviceName;
+  return deploy.taskDefinition &&
+    deploy.taskDefinition.containerDefinitions &&
+    deploy.taskDefinition.containerDefinitions[0].image || `${url}/${deploy.service.serviceName}`;
 }
 
 async function tagDockerImage(current_tag, ecr_tag, ecr_tag_latest) {
   try {
     await exec.exec('docker', ['tag', current_tag, ecr_tag]);
     await exec.exec('docker', ['tag', current_tag, ecr_tag_latest]);
-  }
-  catch (e) {
+  } catch (e) {
     throw new Error('tagDockerImage failed');
   }
 }
 
 async function loginToECR() {
   try {
-    const { stdout: ecr_login_command } = await execa('aws', ['ecr', 'get-login', '--no-include-email']);
-    await exec.exec(ecr_login_command);
-  }
-  catch (e) {
+    const version_info = await execa('aws', ['--version']);
+    if (version_info.stdout.includes('aws-cli/2.')) {
+      const password = await execa('aws', ['ecr', 'get-login-password']);
+      await exec.exec('docker', ['login', '-u', 'AWS', '-p', password.stdout, url]);
+    } else {
+      const res = await execa('aws', ['ecr', 'get-login', '--no-include-email']);
+      await exec.exec(res.stdout);
+    }
+  } catch (e) {
     throw new Error('loginToECR failed');
   }
 }
@@ -35,8 +41,7 @@ async function pushDockerImage(ecr_tag, ecr_tag_latest) {
   try {
     await exec.exec('docker', ['push', ecr_tag]);
     await exec.exec('docker', ['push', ecr_tag_latest]);
-  }
-  catch (e) {
+  } catch (e) {
     throw new Error('pushDockerImage failed');
   }
 }
@@ -44,7 +49,7 @@ async function pushDockerImage(ecr_tag, ecr_tag_latest) {
 async function run() {
   try {
     const repository_name = process.env.REPOSITORY_NAME;
-    if(!repository_name) {
+    if (!repository_name) {
       throw new Error('Required environment variable REPOSITORY_NAME is not set.');
     }
 
@@ -66,8 +71,7 @@ async function run() {
     await loginToECR();
 
     await pushDockerImage(ecr_tag, ecr_tag_latest);
-  }
-  catch (error) {
+  } catch (error) {
     core.setFailed(error.message);
   }
 }
