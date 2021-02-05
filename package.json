@@ -14,9 +14,7 @@
   },
   "homepage": "https://github.com/Springworks/tag-and-push-to-ecr#readme",
   "dependencies": {
-    "@actions/core": "^1.2.0",
-    "@actions/exec": "^1.0.1",
-    "aws-sdk": "^2.566.0",
-    "execa": "^3.3.0"
+    "@actions/core": "^1.2.6",
+    "execa": "^3.4.0"
   }
 }
